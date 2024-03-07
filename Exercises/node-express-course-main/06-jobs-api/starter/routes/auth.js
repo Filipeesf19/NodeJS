@@ -1,3 +1,5 @@
+// Setting up routes to handle post requests
+
 const express = require("express");
 const router = express.Router();
 

@@ -16,7 +16,7 @@ const UserSchema = new mongoose.Schema({
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
       "Please provide valid email",
     ],
-    unique: true, // unique in the database (cant have 2 equal emails)
+    unique: true, // unique in the database (can't have 2 equal emails)
   },
   password: {
     type: String,
@@ -31,12 +31,14 @@ UserSchema.pre("save", async function (next) {
   next();
 });
 
+// Generates a JWT token for that user object
 UserSchema.methods.createJWT = function () {
   return jwt.sign({ userId: this._id, name: this.name }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_LIFETIME,
   });
 };
 
+//compare the input password and the password related to the user
 UserSchema.methods.comparePassword = async function (candidatePassword) {
   const isMatch = await bcrypt.compare(candidatePassword, this.password);
   return isMatch;
